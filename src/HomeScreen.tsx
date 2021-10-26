@@ -4,13 +4,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../App";
 import * as Progress from "react-native-progress";
 
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
-export type NavProps = {
-  navigation: ProfileScreenNavigationProp;
+export type HomeProps = {
+  navigation: ScreenNavigationProp;
 };
 
-export default function HomeScreen({ navigation }: NavProps) {
+export default function HomeScreen({ navigation }: HomeProps) {
   const [progress, setProgress] = useState<number>(3);
   const [completedSets, setcompletedSets] = useState<number>(0); //get from local later.
   return (
@@ -18,9 +18,20 @@ export default function HomeScreen({ navigation }: NavProps) {
       <Text style={styles.header}>Dress Me</Text>
       <Text style={styles.sets}>Sets completed: {completedSets}</Text>
       <View style={styles.buttons}>
-        <Button title="Shirts" onPress={() => navigation.navigate("Shirts")} />
-        <Button title="Pants" onPress={() => navigation.navigate("Pants")} />
-        <Button title="Shoes" onPress={() => navigation.navigate("Shoes")} />
+        <Button
+          title="Shirts"
+          onPress={() =>
+            navigation.navigate("ClothingItem", { type: "Shirts" })
+          }
+        />
+        <Button
+          title="Pants"
+          onPress={() => navigation.navigate("ClothingItem", { type: "Pants" })}
+        />
+        <Button
+          title="Shoes"
+          onPress={() => navigation.navigate("ClothingItem", { type: "Shoes" })}
+        />
         <Progress.Bar
           style={styles.progress_bar}
           progress={progress / 3}
