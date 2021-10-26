@@ -1,13 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { Button, StyleSheet, Text, SafeAreaView } from "react-native";
+import type { NavProps } from "./HomeScreen";
 
-export default function Success() {
+export default function Success({ navigation }: NavProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Success</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>Success!</Text>
+      <Button
+        title="Back to home"
+        onPress={() => navigation.navigate("Home")}
+      />
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
