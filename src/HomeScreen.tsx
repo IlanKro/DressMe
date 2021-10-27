@@ -37,7 +37,7 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
   }, [set]);
 
   useEffect(() => {
-    setSet([]); //empty set on completion
+    setSet([]); //Empty set on completion
     setProgress(0);
   }, [completedSets]);
 
@@ -45,12 +45,12 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
     const item = route.params?.item;
     if (item) {
       const type: string = item.type;
-      setSet(
-        set.filter((i) => {
-          return i.type !== item.type;
-        })
-      ); //remove items with the same type if exists.
-      setSet([...set, item]);
+      setSet([...set.filter((i) => i.type !== item.type), item]); //Remove items with the same type if they exist.
+      if (set.length > CLOTHING_ITEMS_NUMBER) {
+        //failsafe in case of bad updates.
+        setSet([]);
+        setProgress(0);
+      }
     }
   });
 
