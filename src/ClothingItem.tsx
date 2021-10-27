@@ -1,18 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, SafeAreaView, FlatList } from "react-native";
+import {
+  Button,
+  View,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  FlatList,
+} from "react-native";
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
-const Item = ({ name }: any) => (
-  <View>
-    <Text>{name}</Text>
+const addIndex = (list: any[]) => {
+  let newList = [];
+  for (let i = 0; i < list.length; i++) {
+    newList.push({ id: i, value: list[i] });
+  }
+  return newList;
+};
+const Item = ({ name, brand, colors }: any) => (
+  <View style={styles.item}>
+    <Text>name: {name}</Text>
+    <Text>brand: {brand}</Text>
+    {colors && (
+      <FlatList data={addIndex(colors.sort())} renderItem={renderColorButton} />
+    )}
   </View>
 );
 
+const renderColorButton = ({ item }: any) => {
+  return (
+    <Button
+      color={item.value}
+      title={item.value}
+      onPress={() => console.log("pressed")}
+    />
+  );
+};
+
 const renderItem = ({ item }: any) => {
-  return <Item name={item.name} />;
+  return <Item name={item.name} brand={item.brand} colors={item.colors} />;
 };
 
 type SearchOptions = "name" | "brand" | "color" | "size";
@@ -64,5 +92,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#fff",
+  },
+  item: {
+    borderColor: "black",
+    borderRadius: 2,
+    borderWidth: 2,
+    margin: 3,
+    flexGrow: 1,
   },
 });
