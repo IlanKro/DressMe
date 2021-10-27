@@ -11,6 +11,7 @@ import {
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { addIndex, sortByProperty } from "./util/util";
+import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
@@ -18,7 +19,22 @@ type SearchOptions = "name" | "brand" | "color" | "size";
 
 export default function ClothingItemComponent({ route, navigation }: Props) {
   const type = route.params.type;
-  navigation.setOptions({ title: type });
+  navigation.setOptions({
+    headerTitle: (props: any) => <LogoTitle {...props} />,
+  });
+  function LogoTitle() {
+    return (
+      <View style={styles.header}>
+        {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
+        {type == "pants" && <Feather name="columns" size={32} color="blue" />}
+        {type == "shoes" && (
+          <MaterialCommunityIcons name="shoe-formal" size={32} color="blue" />
+        )}
+        <Text style={styles.headerText}>{type}</Text>
+      </View>
+    );
+  }
+
   const [search, setSearch] = useState<string>("");
   const [searchCategory, setSearchCategory] = useState<SearchOptions>("name");
   const [filteredData, SetFilteredData] = useState<ClothingItem[]>([]);
@@ -141,8 +157,12 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
 }
 const styles = StyleSheet.create({
   header: {
-    fontSize: 35,
-    justifyContent: "flex-start",
+    flexDirection: "row",
+  },
+  headerText: {
+    fontSize: 25,
+    alignSelf: "center",
+    fontWeight: "bold",
   },
   container: {
     flex: 1,
