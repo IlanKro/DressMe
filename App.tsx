@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./src/HomeScreen";
-import ClothingItem from "./src/ClothingItem";
+import ClothingItemComponent from "./src/ClothingItem";
 import Success from "./src/Success";
 
 export type ClothingItem = {
@@ -15,7 +15,7 @@ export type ClothingItem = {
 };
 
 export type RootStackParamList = {
-  Home: { set: ClothingItem[] } | undefined;
+  Home: { item: ClothingItem } | undefined;
   Success: { set: ClothingItem[] };
   ClothingItem: { type: string };
 };
@@ -27,7 +27,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ClothingItem" component={ClothingItem} />
+        <Stack.Screen name="ClothingItem" component={ClothingItemComponent} />
         <Stack.Screen name="Success" component={Success} />
       </Stack.Navigator>
     </NavigationContainer>

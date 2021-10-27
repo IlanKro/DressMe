@@ -4,37 +4,43 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList, ClothingItem } from "../App";
 import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ClothingItemComponent from "./ClothingItem";
 
-export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+//export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
-export type HomeProps = {
+/*export type HomeProps = {
   navigation: ScreenNavigationProp;
-};
+};*/
 
 const storeData = async (key: string, value: string) => {
   try {
     await AsyncStorage.setItem(key, value);
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
   }
 };
 const getData = async (key: string) => {
   try {
     return await AsyncStorage.getItem(key);
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
   }
 };
+type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
-export default function HomeScreen({ navigation }: HomeProps) {
+export default function HomeScreen({ route, navigation }: HomeProps) {
   const [progress, setProgress] = useState<number>(3);
   const [completedSets, setcompletedSets] = useState<number>(0); //get from local later.
   const [set, setSet] = useState<ClothingItem[]>([]);
-  const [time, setTime] = useState<number>(0);
+  //const [time, setTime] = useState<number>(0);
+  const CLOTHING_ITEMS_NUMBER = 3;
 
   useEffect(() => {
-    setProgress(set.length);
+    //setProgress(set.length);
   }, [set]);
+
+  //console.log("item:", route.params?.item);
 
   getData("completed_sets").then((completed) =>
     setcompletedSets(completed ? parseInt(completed) : 0)
@@ -43,25 +49,26 @@ export default function HomeScreen({ navigation }: HomeProps) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Dress Me</Text>
-      <Text style={styles.sets}>Sets completed: {completedSets}</Text>
+      <Text style={styles.label}>Sets completed: {completedSets}</Text>
       <View style={styles.buttons}>
         <Button
           title="Shirt"
-          onPress={() =>
-            navigation.navigate("ClothingItem", { type: "Shirts" })
-          }
+          onPress={() => navigation.navigate("ClothingItem", { type: "shirt" })}
         />
         <Button
           title="Pants"
-          onPress={() => navigation.navigate("ClothingItem", { type: "Pants" })}
+          onPress={() => navigation.navigate("ClothingItem", { type: "pants" })}
         />
         <Button
           title="Shoes"
-          onPress={() => navigation.navigate("ClothingItem", { type: "Shoes" })}
+          onPress={() => navigation.navigate("ClothingItem", { type: "shoes" })}
         />
+        <Text style={styles.label}>
+          Progress: {progress}/{CLOTHING_ITEMS_NUMBER}
+        </Text>
         <Progress.Bar
           style={styles.progress_bar}
-          progress={progress / 3}
+          progress={progress / CLOTHING_ITEMS_NUMBER}
           width={200}
         />
       </View>
@@ -85,8 +92,10 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 35,
   },
-  sets: {
+  label: {
     fontSize: 14,
+    alignItems: "center",
+    justifyContent: "center",
   },
   container: {
     alignItems: "center",

@@ -1,8 +1,11 @@
 import React from "react";
 import { Button, StyleSheet, Text, SafeAreaView, Image } from "react-native";
-import type { HomeProps } from "./HomeScreen";
+//import type { HomeProps } from "./HomeScreen";
+import { RootStackParamList } from "../App";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function Success({ navigation }: HomeProps) {
+type SuccessProps = NativeStackScreenProps<RootStackParamList, "Home">;
+export default function Success({ route, navigation }: SuccessProps) {
   return (
     <SafeAreaView style={styles.container}>
       <Image
