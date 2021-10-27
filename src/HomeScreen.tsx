@@ -3,11 +3,27 @@ import { Button, StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList, ClothingItem } from "../App";
 import * as Progress from "react-native-progress";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 export type HomeProps = {
   navigation: ScreenNavigationProp;
+};
+
+const storeData = async (key: string, value: string) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (e) {
+    console.log(e);
+  }
+};
+const getData = async (key: string) => {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export default function HomeScreen({ navigation }: HomeProps) {
@@ -19,6 +35,10 @@ export default function HomeScreen({ navigation }: HomeProps) {
   useEffect(() => {
     setProgress(set.length);
   }, [set]);
+
+  getData("completed_sets").then((completed) =>
+    setcompletedSets(completed ? parseInt(completed) : 0)
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,6 +70,7 @@ export default function HomeScreen({ navigation }: HomeProps) {
           <Button
             title="Finish!"
             onPress={() => {
+              storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
               navigation.navigate("Success", { set: set });
             }}
