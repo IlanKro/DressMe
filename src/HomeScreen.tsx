@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../App";
+import { RootStackParamList, ClothingItem } from "../App";
 import * as Progress from "react-native-progress";
 
 export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -13,13 +13,20 @@ export type HomeProps = {
 export default function HomeScreen({ navigation }: HomeProps) {
   const [progress, setProgress] = useState<number>(3);
   const [completedSets, setcompletedSets] = useState<number>(0); //get from local later.
+  const [set, setSet] = useState<ClothingItem[]>([]);
+  const [time, setTime] = useState<number>(0);
+
+  useEffect(() => {
+    setProgress(set.length);
+  }, [set]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Dress Me</Text>
       <Text style={styles.sets}>Sets completed: {completedSets}</Text>
       <View style={styles.buttons}>
         <Button
-          title="Shirts"
+          title="Shirt"
           onPress={() =>
             navigation.navigate("ClothingItem", { type: "Shirts" })
           }
@@ -41,8 +48,11 @@ export default function HomeScreen({ navigation }: HomeProps) {
       {progress === 3 && (
         <SafeAreaView style={styles.done_button}>
           <Button
-            title="Done!"
-            onPress={() => navigation.navigate("Success")}
+            title="Finish!"
+            onPress={() => {
+              setcompletedSets(completedSets + 1);
+              navigation.navigate("Success", { set: set });
+            }}
           />
         </SafeAreaView>
       )}

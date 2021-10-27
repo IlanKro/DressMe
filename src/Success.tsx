@@ -9,12 +9,13 @@ export default function Success({ navigation }: HomeProps) {
         source={{
           width: 200,
           height: 200,
-          uri: "https://picsum.photos/200",
+          uri: "https://source.unsplash.com/1600x900/?success",
         }}
       />
       <Text style={styles.header}>Success!</Text>
+      <Text style={styles.timer}>Took you: Seconds</Text>
       <Button
-        title="Back to home"
+        title="Choose another set"
         onPress={() => navigation.navigate("Home")}
       />
     </SafeAreaView>
@@ -24,9 +25,11 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 35,
   },
+  timer: {
+    fontSize: 20,
+  },
   container: {
     alignItems: "center",
-    justifyContent: "center",
     flex: 1,
     backgroundColor: "#fff",
   },

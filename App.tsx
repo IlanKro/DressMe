@@ -5,9 +5,18 @@ import HomeScreen from "./src/HomeScreen";
 import ClothingItem from "./src/ClothingItem";
 import Success from "./src/Success";
 
+export type ClothingItem = {
+  id: number;
+  type: string;
+  name: string;
+  colors: string[];
+  sizes: number[];
+  brand: string;
+};
+
 export type RootStackParamList = {
-  Home: undefined;
-  Success: undefined;
+  Home: { set: ClothingItem[] } | undefined;
+  Success: { set: ClothingItem[] };
   ClothingItem: { type: string };
 };
 
