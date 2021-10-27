@@ -14,8 +14,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
-  const Item = ({ name, brand, color, size }: any) => (
+  const Item = ({ type, name, brand, color, size }: any) => (
     <View style={styles.item}>
+      <Text>type: {type} </Text>
       <Text>name: {name}</Text>
       <Text>brand: {brand}</Text>
       <Text>color: {color} </Text>
@@ -26,6 +27,7 @@ export default function Success({ route, navigation }: SuccessProps) {
   const renderItem = ({ item }: any) => {
     return (
       <Item
+        type={item.type}
         name={item.name}
         brand={item.brand}
         color={item.colors}
