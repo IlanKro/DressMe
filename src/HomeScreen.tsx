@@ -4,6 +4,7 @@ import { RootStackParamList, ClothingItem } from "../App";
 import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 
 const storeData = async (key: string, value: string) => {
   try {
@@ -50,6 +51,7 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
         //failsafe in case of bad updates.
         setSet([]);
         setProgress(0);
+        navigation.setParams({ item: undefined }); //delete item after using.
       }
     }
   });
@@ -67,10 +69,12 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
           title="Shirt"
           onPress={() => navigation.navigate("ClothingItem", { type: "shirt" })}
         />
+
         <Button
           title="Pants"
           onPress={() => navigation.navigate("ClothingItem", { type: "pants" })}
         />
+
         <Button
           title="Shoes"
           onPress={() => navigation.navigate("ClothingItem", { type: "shoes" })}
@@ -78,6 +82,29 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
         <Text style={styles.label}>
           Progress: {progress}/{CLOTHING_ITEMS_NUMBER}
         </Text>
+        <View style={styles.icons}>
+          <Ionicons
+            name="shirt"
+            size={32}
+            color={
+              set.findIndex((i) => i.type === "shirt") != -1 ? "green" : "grey"
+            }
+          />
+          <Feather
+            name="columns"
+            size={32}
+            color={
+              set.findIndex((i) => i.type === "pants") != -1 ? "green" : "grey"
+            }
+          />
+          <MaterialCommunityIcons
+            name="shoe-formal"
+            size={32}
+            color={
+              set.findIndex((i) => i.type === "shoes") != -1 ? "green" : "grey"
+            }
+          />
+        </View>
         <Progress.Bar
           style={styles.progress_bar}
           progress={progress / CLOTHING_ITEMS_NUMBER}
@@ -127,5 +154,9 @@ const styles = StyleSheet.create({
   done_button: {
     marginBottom: 20,
     marginTop: 50,
+  },
+  icons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
