@@ -120,6 +120,9 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
         //Removed duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys...
         items = [...new Set(items)];
         setData(items);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, []);
 

@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, Text, View, SafeAreaView } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList, ClothingItem } from "../App";
 import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import ClothingItemComponent from "./ClothingItem";
-
-//export type ScreenNavigationProp = StackNavigationProp<RootStackParamList>;
-
-/*export type HomeProps = {
-  navigation: ScreenNavigationProp;
-};*/
 
 const storeData = async (key: string, value: string) => {
   try {
@@ -29,18 +21,42 @@ const getData = async (key: string) => {
 };
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
+interface IDictionary {
+  [index: string]: ClothingItem;
+}
+
 export default function HomeScreen({ route, navigation }: HomeProps) {
-  const [progress, setProgress] = useState<number>(3);
+  const [progress, setProgress] = useState<number>(0);
   const [completedSets, setcompletedSets] = useState<number>(0); //get from local later.
   const [set, setSet] = useState<ClothingItem[]>([]);
   //const [time, setTime] = useState<number>(0);
   const CLOTHING_ITEMS_NUMBER = 3;
 
   useEffect(() => {
-    //setProgress(set.length);
+    setProgress(set.length);
   }, [set]);
 
-  //console.log("item:", route.params?.item);
+  useEffect(() => {
+    setSet([]); //empty set on completion
+    setProgress(0);
+  }, [completedSets]);
+
+  navigation.addListener("focus", () => {
+    const item = route.params?.item;
+    console.log(set);
+    console.log("length: ", set.length);
+    console.log("item:", item);
+    if (item) {
+      const type: string = item.type;
+      setSet(
+        set.filter((i) => {
+          console.log(i.type !== item.type);
+          return i.type !== item.type;
+        })
+      ); //remove items with the same type if exists.
+      setSet([...set, item]);
+    }
+  });
 
   getData("completed_sets").then((completed) =>
     setcompletedSets(completed ? parseInt(completed) : 0)
@@ -79,6 +95,7 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
             onPress={() => {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
+              setProgress(0);
               navigation.navigate("Success", { set: set });
             }}
           />

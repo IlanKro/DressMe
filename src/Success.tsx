@@ -1,11 +1,39 @@
 import React from "react";
-import { Button, StyleSheet, Text, SafeAreaView, Image } from "react-native";
-//import type { HomeProps } from "./HomeScreen";
+import {
+  View,
+  Button,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  Image,
+  FlatList,
+} from "react-native";
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-type SuccessProps = NativeStackScreenProps<RootStackParamList, "Home">;
+type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
+
 export default function Success({ route, navigation }: SuccessProps) {
+  const Item = ({ name, brand, color, size }: any) => (
+    <View style={styles.item}>
+      <Text>name: {name}</Text>
+      <Text>brand: {brand}</Text>
+      <Text>color: {color} </Text>
+      <Text>size: {size} </Text>
+    </View>
+  );
+
+  const renderItem = ({ item }: any) => {
+    return (
+      <Item
+        name={item.name}
+        brand={item.brand}
+        color={item.colors}
+        size={item.sizes}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -17,6 +45,11 @@ export default function Success({ route, navigation }: SuccessProps) {
       />
       <Text style={styles.header}>Success!</Text>
       <Text style={styles.timer}>Took you: Seconds</Text>
+      <FlatList
+        data={route.params.set}
+        renderItem={renderItem}
+        ListEmptyComponent={<Text>no results found</Text>}
+      />
       <Button
         title="Choose another set"
         onPress={() => navigation.navigate("Home")}
@@ -36,4 +69,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  item: {},
 });
