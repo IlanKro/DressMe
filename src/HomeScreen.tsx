@@ -43,14 +43,10 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
 
   navigation.addListener("focus", () => {
     const item = route.params?.item;
-    console.log(set);
-    console.log("length: ", set.length);
-    console.log("item:", item);
     if (item) {
       const type: string = item.type;
       setSet(
         set.filter((i) => {
-          console.log(i.type !== item.type);
           return i.type !== item.type;
         })
       ); //remove items with the same type if exists.
