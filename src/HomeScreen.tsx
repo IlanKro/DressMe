@@ -5,6 +5,29 @@ import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { autorun, makeAutoObservable } from "mobx";
+import { observer } from "mobx-react";
+
+class Timer {
+  secondsPassed: number = 0;
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  increaseTimer() {
+    this.secondsPassed += 1;
+  }
+
+  resetTimer() {
+    this.secondsPassed = 0;
+  }
+}
+
+const completionTimer = new Timer();
+setInterval(() => {
+  completionTimer.increaseTimer();
+}, 1000);
 
 const storeData = async (key: string, value: string) => {
   try {
@@ -22,37 +45,29 @@ const getData = async (key: string) => {
 };
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
-interface IDictionary {
-  [index: string]: ClothingItem;
-}
-
 export default function HomeScreen({ route, navigation }: HomeProps) {
   const [progress, setProgress] = useState<number>(0);
-  const [completedSets, setcompletedSets] = useState<number>(0); //get from local later.
-  const [set, setSet] = useState<ClothingItem[]>([]);
-  //const [time, setTime] = useState<number>(0);
+  const [completedSets, setcompletedSets] = useState<number>(0);
+  const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const CLOTHING_ITEMS_NUMBER = 3;
 
   useEffect(() => {
-    setProgress(set.length);
-  }, [set]);
+    setProgress(itemSet.length);
+  }, [itemSet]);
 
   useEffect(() => {
-    setSet([]); //Empty set on completion
-    setProgress(0);
+    return function emptyItemSet() {
+      setProgress(0);
+      setItemSet([]);
+    };
   }, [completedSets]);
 
   navigation.addListener("focus", () => {
     const item = route.params?.item;
     if (item) {
       const type: string = item.type;
-      setSet([...set.filter((i) => i.type !== item.type), item]); //Remove items with the same type if they exist.
-      if (set.length > CLOTHING_ITEMS_NUMBER) {
-        //failsafe in case of bad updates.
-        setSet([]);
-        setProgress(0);
-        navigation.setParams({ item: undefined }); //delete item after using.
-      }
+      setItemSet([...itemSet.filter((i) => i.type !== item.type), item]); //Remove items with the same type if they exist.
+      //navigation.setParams({ item: undefined }); //delete item after using.
     }
   });
 
@@ -87,21 +102,27 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
             name="shirt"
             size={32}
             color={
-              set.findIndex((i) => i.type === "shirt") != -1 ? "green" : "grey"
+              itemSet.findIndex((i) => i.type === "shirt") != -1
+                ? "green"
+                : "grey"
             }
           />
           <Feather
             name="columns"
             size={32}
             color={
-              set.findIndex((i) => i.type === "pants") != -1 ? "green" : "grey"
+              itemSet.findIndex((i) => i.type === "pants") != -1
+                ? "green"
+                : "grey"
             }
           />
           <MaterialCommunityIcons
             name="shoe-formal"
             size={32}
             color={
-              set.findIndex((i) => i.type === "shoes") != -1 ? "green" : "grey"
+              itemSet.findIndex((i) => i.type === "shoes") != -1
+                ? "green"
+                : "grey"
             }
           />
         </View>
@@ -119,7 +140,11 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
               setProgress(0);
-              navigation.navigate("Success", { set: set });
+              navigation.navigate("Success", {
+                set: itemSet,
+                time: completionTimer.secondsPassed,
+              });
+              completionTimer.resetTimer();
             }}
           />
         </SafeAreaView>

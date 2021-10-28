@@ -16,7 +16,7 @@ export type ClothingItem = {
 
 export type RootStackParamList = {
   Home: { item: ClothingItem } | undefined;
-  Success: { set: ClothingItem[] };
+  Success: { set: ClothingItem[]; time: number };
   ClothingItem: { type: string };
 };
 
