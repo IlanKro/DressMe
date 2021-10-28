@@ -7,11 +7,13 @@ import {
   SafeAreaView,
   FlatList,
   Alert,
+  TextInput,
 } from "react-native";
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import SelectDropdown from "react-native-select-dropdown";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
@@ -22,6 +24,13 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
   navigation.setOptions({
     headerTitle: (props: any) => <LogoTitle {...props} />,
   });
+  const [search, setSearch] = useState<string>("");
+  const [searchCategory, setSearchCategory] = useState<SearchOptions>("name");
+  const [filteredData, setFilteredData] = useState<ClothingItem[]>([]);
+  const [data, setData] = useState<ClothingItem[]>([]);
+  const [color, setColor] = useState<string>("");
+  const [selected, setSelected] = useState<string>("");
+
   function LogoTitle() {
     return (
       <View style={styles.header}>
@@ -35,12 +44,32 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
     );
   }
 
-  const [search, setSearch] = useState<string>("");
-  const [searchCategory, setSearchCategory] = useState<SearchOptions>("name");
-  const [filteredData, SetFilteredData] = useState<ClothingItem[]>([]);
-  const [data, setData] = useState<ClothingItem[]>([]);
-  const [color, setColor] = useState<string>("");
-  const [selected, setSelected] = useState<string>("");
+  useEffect(() => {
+    fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
+      .then((response) => response.json())
+      .then((data) => {
+        let items = [];
+        for (let i = 0; i < data.results.length; i++) {
+          items.push(data.results[i]);
+        }
+        items = items.filter((item) => item["type"] == type);
+        items.sort(sortByProperty("name"));
+        //Removed duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys...
+        items = [...new Set(items)];
+        setData(items);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (search === "") {
+      setFilteredData(data);
+    } else {
+      setFilteredData(data);
+    }
+  }, [search]);
 
   const renderItem = ({ item }: any) => {
     return (
@@ -123,27 +152,32 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
     );
   };
 
-  useEffect(() => {
-    fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
-      .then((response) => response.json())
-      .then((data) => {
-        let items = [];
-        for (let i = 0; i < data.results.length; i++) {
-          items.push(data.results[i]);
-        }
-        items = items.filter((item) => item["type"] == type);
-        items.sort(sortByProperty("name"));
-        //Removed duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys...
-        items = [...new Set(items)];
-        setData(items);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.searchBar}>
+        <TextInput
+          style={styles.searchBarText}
+          defaultValue=""
+          placeholder="search here..."
+          onChangeText={setSearch}
+        />
+        <SelectDropdown
+          data={["name", "brand", "size", "color"]}
+          onSelect={setSearchCategory}
+          buttonTextAfterSelection={(
+            selectedItem: SearchOptions,
+            index: number
+          ) => {
+            return selectedItem;
+          }}
+          rowTextForSelection={(item: SearchOptions, index: number) => {
+            return item;
+          }}
+          buttonStyle={styles.searchCategorySelect}
+          dropdownStyle={styles.searchCategorySelect}
+          defaultButtonText="category"
+        />
+      </View>
       <Text style={styles.found}>found {data.length} items</Text>
       {data && (
         <FlatList
@@ -177,5 +211,22 @@ const styles = StyleSheet.create({
   },
   found: {
     alignSelf: "center",
+  },
+  searchBar: {
+    flexDirection: "row",
+  },
+  searchBarText: {
+    borderWidth: 1,
+    width: 250,
+    flex: 0.7,
+    borderRadius: 20,
+    marginLeft: 20,
+    marginRight: 10,
+  },
+  searchCategorySelect: {
+    flex: 0.4,
+    borderRadius: 20,
+    marginLeft: 10,
+    marginRight: 20,
   },
 });
