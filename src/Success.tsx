@@ -10,13 +10,7 @@ import {
 } from "react-native";
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Col,
-} from "react-native-table-component";
+import { Table, Row, Rows } from "react-native-table-component";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
@@ -50,7 +44,7 @@ export default function Success({ route, navigation }: SuccessProps) {
           }}
         />
         <Text style={styles.header}>Success!</Text>
-        <Text style={styles.timer}>Took you: Seconds</Text>
+        <Text style={styles.timer}>Took you: {route.params.time} Seconds</Text>
       </View>
       <ScrollView style={styles.tableContainer}>
         <Table borderStyle={styles.tableBorder}>
