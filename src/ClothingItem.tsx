@@ -17,7 +17,7 @@ import SelectDropdown from "react-native-select-dropdown";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
-type SearchOptions = "name" | "brand" | "color" | "size";
+type SearchOptions = "name" | "brand" | "colors" | "sizes";
 
 export default function ClothingItemComponent({ route, navigation }: Props) {
   const type = route.params.type;
@@ -54,20 +54,41 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
         }
         items = items.filter((item) => item["type"] == type);
         items.sort(sortByProperty("name"));
-        //Removed duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys...
+        //Remove duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys
         items = [...new Set(items)];
         setData(items);
+        setFilteredData(items);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
+  const queryItems = () => {
+    return ["name", "brand"].includes(searchCategory)
+      ? data.filter((item) =>
+          String(item[searchCategory])
+            .toLocaleLowerCase() //Match without case sensitivity.
+            .includes(search.toLocaleLowerCase())
+        )
+      : data.filter(
+          (item) =>
+            //If it's colors/sizes which are string[]
+            (item[searchCategory] as String[]).filter((element) =>
+              String(element)
+                .toLocaleLowerCase()
+                .includes(search.toLocaleLowerCase())
+            ).length > 0
+        );
+  };
+
   useEffect(() => {
     if (search === "") {
       setFilteredData(data);
     } else {
-      setFilteredData(data);
+      search.length <= 2
+        ? setFilteredData(queryItems().slice(0, 5))
+        : setFilteredData(queryItems());
     }
   }, [search]);
 
@@ -162,26 +183,23 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
           onChangeText={setSearch}
         />
         <SelectDropdown
-          data={["name", "brand", "size", "color"]}
+          data={["name", "brand", "sizes", "colors"]}
           onSelect={setSearchCategory}
-          buttonTextAfterSelection={(
-            selectedItem: SearchOptions,
-            index: number
-          ) => {
+          buttonTextAfterSelection={(selectedItem: SearchOptions) => {
             return selectedItem;
           }}
-          rowTextForSelection={(item: SearchOptions, index: number) => {
+          rowTextForSelection={(item: SearchOptions) => {
             return item;
           }}
           buttonStyle={styles.searchCategorySelect}
           dropdownStyle={styles.searchCategorySelect}
-          defaultButtonText="category"
+          defaultButtonText="Search By"
         />
       </View>
-      <Text style={styles.found}>found {data.length} items</Text>
-      {data && (
+      <Text style={styles.found}>found {filteredData.length} items</Text>
+      {filteredData && (
         <FlatList
-          data={data}
+          data={filteredData}
           renderItem={renderItem}
           ListEmptyComponent={<Text>no results found</Text>}
         />
