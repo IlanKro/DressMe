@@ -5,8 +5,7 @@ import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import { autorun, makeAutoObservable } from "mobx";
-import { observer } from "mobx-react";
+import { makeAutoObservable } from "mobx";
 
 class Timer {
   secondsPassed: number = 0;
