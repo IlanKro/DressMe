@@ -6,56 +6,72 @@ import {
   Text,
   SafeAreaView,
   Image,
-  FlatList,
+  ScrollView,
 } from "react-native";
-import { RootStackParamList } from "../App";
+import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  Table,
+  TableWrapper,
+  Row,
+  Rows,
+  Col,
+} from "react-native-table-component";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
-  const Item = ({ type, name, brand, color, size }: any) => (
-    <View style={styles.item}>
-      <Text>type: {type} </Text>
-      <Text>name: {name}</Text>
-      <Text>brand: {brand}</Text>
-      <Text>color: {color} </Text>
-      <Text>size: {size} </Text>
-    </View>
-  );
+  const tableHead = () => {
+    return ["Type", "Name", "Brand", "Color", "Size"];
+  };
 
-  const renderItem = ({ item }: any) => {
-    return (
-      <Item
-        type={item.type}
-        name={item.name}
-        brand={item.brand}
-        color={item.colors}
-        size={item.sizes}
-      />
-    );
+  const tableData = (collection: ClothingItem[]) => {
+    let tableData: any[][] = [];
+    collection.forEach((element) => {
+      tableData.push([
+        element.type,
+        element.name,
+        element.brand,
+        element.colors[0],
+        element.sizes[0],
+      ]);
+    });
+    return tableData;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        source={{
-          width: 200,
-          height: 200,
-          uri: "https://source.unsplash.com/1600x900/?success",
-        }}
-      />
-      <Text style={styles.header}>Success!</Text>
-      <Text style={styles.timer}>Took you: Seconds</Text>
-      <FlatList
-        data={route.params.set}
-        renderItem={renderItem}
-        ListEmptyComponent={<Text>no results found</Text>}
-      />
-      <Button
-        title="Choose another set"
-        onPress={() => navigation.navigate("Home")}
-      />
+      <View style={styles.centeredContent}>
+        <Image
+          source={{
+            width: 200,
+            height: 200,
+            uri: "https://source.unsplash.com/1600x900/?success",
+          }}
+        />
+        <Text style={styles.header}>Success!</Text>
+        <Text style={styles.timer}>Took you: Seconds</Text>
+      </View>
+      <ScrollView style={styles.tableContainer}>
+        <Table borderStyle={styles.tableBorder}>
+          <Row
+            data={tableHead()}
+            style={styles.columnTitle}
+            textStyle={styles.text}
+          />
+          <Rows
+            data={tableData(route.params.set)}
+            style={styles.row}
+            textStyle={styles.text}
+          />
+        </Table>
+      </ScrollView>
+      <View style={styles.centeredContent}>
+        <Button
+          title="Choose another set"
+          onPress={() => navigation.navigate("Home")}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -63,13 +79,22 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 35,
   },
+  centeredContent: {
+    alignItems: "center",
+  },
   timer: {
     fontSize: 20,
   },
   container: {
-    alignItems: "center",
     flex: 1,
     backgroundColor: "#fff",
   },
-  item: {},
+  tableContainer: {
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+  tableBorder: { borderWidth: 2, borderColor: "#c8e1ff" },
+  columnTitle: { height: 50, backgroundColor: "#f1f8ff" },
+  row: { height: 50 },
+  text: { textAlign: "center" },
 });
