@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Image,
   ScrollView,
+  Share,
 } from "react-native";
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -34,16 +35,32 @@ export default function Success({ route, navigation }: SuccessProps) {
     };
   }, []);
 
-  const copyToClipboard = () => {
-    Clipboard.setString(SUCCESS_TEXT + " " + JSON.stringify(route.params.set));
-    Toast.show({
-      type: "success",
-      text1: "Copied to clipboard",
-      visibilityTime: 3000,
-      autoHide: true,
-      position: "bottom",
-      bottomOffset: 60,
-    });
+  const getShareableContent = () => {
+    return SUCCESS_TEXT + " " + JSON.stringify(route.params.set);
+  };
+
+  const copyToClipboard = async () => {
+    Clipboard.setString(getShareableContent());
+    if ((await Clipboard.getStringAsync()) === getShareableContent()) {
+      Toast.show({
+        type: "success",
+        text1: "Copied to clipboard",
+        visibilityTime: 3000,
+        autoHide: true,
+        position: "top",
+        bottomOffset: 60,
+      });
+    }
+  };
+
+  const onShare = async () => {
+    try {
+      await Share.share({
+        message: getShareableContent(),
+      });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const tableHead = () => {
@@ -102,6 +119,9 @@ export default function Success({ route, navigation }: SuccessProps) {
           />
         </Table>
       </ScrollView>
+      <View style={successStyles.centeredContent}>
+        <Button title="Share" onPress={() => onShare()} />
+      </View>
       <View style={successStyles.buttonPanel}>
         <Button
           title="Choose another set"
@@ -109,6 +129,7 @@ export default function Success({ route, navigation }: SuccessProps) {
         />
         <Button title="Copy to clipboard" onPress={() => copyToClipboard()} />
       </View>
+
       <Toast ref={(ref) => Toast.setRef(ref)} />
     </SafeAreaView>
   );
