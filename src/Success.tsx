@@ -11,12 +11,15 @@ import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
+import Toast from "react-native-toast-message";
+import * as Clipboard from "expo-clipboard";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
   const [image, setImage] = useState<string>("");
   const IMAGE_SIZE = 150;
+  const SUCCESS_TEXT = "Success!";
   useEffect(() => {
     let mounted = true;
     if (mounted) {
@@ -30,6 +33,18 @@ export default function Success({ route, navigation }: SuccessProps) {
       mounted = false;
     };
   }, []);
+
+  const copyToClipboard = () => {
+    Clipboard.setString(SUCCESS_TEXT + " " + JSON.stringify(route.params.set));
+    Toast.show({
+      type: "success",
+      text1: "Copied to clipboard",
+      visibilityTime: 3000,
+      autoHide: true,
+      position: "bottom",
+      bottomOffset: 60,
+    });
+  };
 
   const tableHead = () => {
     return ["Type", "Name", "Brand", "Color", "Size"];
@@ -68,7 +83,7 @@ export default function Success({ route, navigation }: SuccessProps) {
           }}
         />
 
-        <Text style={successStyles.header}>Success!</Text>
+        <Text style={successStyles.header}>{SUCCESS_TEXT}</Text>
         <Text style={successStyles.timer}>
           Took you: {route.params.time} Seconds
         </Text>
@@ -87,12 +102,14 @@ export default function Success({ route, navigation }: SuccessProps) {
           />
         </Table>
       </ScrollView>
-      <View style={successStyles.centeredContent}>
+      <View style={successStyles.buttonPanel}>
         <Button
           title="Choose another set"
           onPress={() => navigation.navigate("Home")}
         />
+        <Button title="Copy to clipboard" onPress={() => copyToClipboard()} />
       </View>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </SafeAreaView>
   );
 }
