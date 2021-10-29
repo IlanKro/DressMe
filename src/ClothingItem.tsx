@@ -20,12 +20,9 @@ type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
 type SearchOptions = "name" | "brand" | "colors" | "sizes";
 
-export default function ClothingItemComponent({ route, navigation }: Props) {
+export default function ClothingItemComponent({ navigation }: Props) {
   const storage = getUserstore();
   const type = storage.getType();
-  navigation.setOptions({
-    headerTitle: (props: any) => <LogoTitle {...props} />,
-  });
   const [search, setSearch] = useState<string>("");
   const [searchCategory, setSearchCategory] = useState<SearchOptions>("name");
   const [filteredData, setFilteredData] = useState<ClothingItem[]>([]);
@@ -49,6 +46,9 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
+      navigation.setOptions({
+        headerTitle: (props: any) => <LogoTitle {...props} />,
+      });
       fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
         .then((response) => response.json())
         .then((data) => {
@@ -130,7 +130,7 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
           <Text>sizes: </Text>
           <FlatList
             data={addIndex(sizes.sort())}
-            renderItem={(item) => renderSizesButton(item, id)}
+            renderItem={(item) => renderSizesButton(item)}
             listKey={id + "sizes"}
           />
         </View>
@@ -151,7 +151,7 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
     );
   };
 
-  const renderSizesButton = ({ item }: any, id: string) => {
+  const renderSizesButton = ({ item }: any) => {
     return (
       <Button
         title={item.value.toString()}
