@@ -16,12 +16,19 @@ type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
   const [image, setImage] = useState<string>("");
+  const IMAGE_SIZE = 150;
   useEffect(() => {
-    fetch("https://source.unsplash.com/1600x900/?success")
-      .then((responce) => setImage(responce.url))
-      .catch((error) => {
-        console.log(error);
-      });
+    let mounted = true;
+    if (mounted) {
+      fetch("https://source.unsplash.com/1600x900/?success")
+        .then((responce) => setImage(responce.url))
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    return function cleanup() {
+      mounted = false;
+    };
   }, []);
 
   const tableHead = () => {
@@ -49,13 +56,16 @@ export default function Success({ route, navigation }: SuccessProps) {
           source={
             image
               ? {
-                  width: 200,
-                  height: 200,
+                  width: IMAGE_SIZE,
+                  height: IMAGE_SIZE,
                   uri: image,
                 }
               : require("../assets/Default_Image.png")
           }
-          style={{ height: 200, width: 200, resizeMode: "stretch" }}
+          style={{
+            height: IMAGE_SIZE,
+            width: IMAGE_SIZE,
+          }}
         />
 
         <Text style={successStyles.header}>Success!</Text>

@@ -45,23 +45,29 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
   }
 
   useEffect(() => {
-    fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
-      .then((response) => response.json())
-      .then((data) => {
-        let items = [];
-        for (let i = 0; i < data.results.length; i++) {
-          items.push(data.results[i]);
-        }
-        items = items.filter((item) => item["type"] == type);
-        items.sort(sortByProperty("name"));
-        //Remove duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys
-        items = [...new Set(items)];
-        setData(items);
-        setFilteredData(items);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    let mounted = true;
+    if (mounted) {
+      fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
+        .then((response) => response.json())
+        .then((data) => {
+          let items = [];
+          for (let i = 0; i < data.results.length; i++) {
+            items.push(data.results[i]);
+          }
+          items = items.filter((item) => item["type"] == type);
+          items.sort(sortByProperty("name"));
+          //Remove duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys
+          items = [...new Set(items)];
+          setData(items);
+          setFilteredData(items);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    return function cleanup() {
+      mounted = false;
+    };
   }, []);
 
   const queryItems = () => {
