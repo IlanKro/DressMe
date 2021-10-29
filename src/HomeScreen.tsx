@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
+import { getUserstore } from "./storage";
 
 class Timer {
   secondsPassed: number = 0;
@@ -50,25 +51,21 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
   const [completedSets, setcompletedSets] = useState<number>(0);
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const CLOTHING_ITEMS_NUMBER = 3;
+  const storage = getUserstore();
 
   useEffect(() => {
-    setProgress(itemSet.length);
+    setProgress(storage.getProgress());
   }, [itemSet]);
 
   useEffect(() => {
     return function emptyItemSet() {
-      setProgress(0);
+      setProgress(storage.getProgress());
       setItemSet([]);
     };
   }, [completedSets]);
 
   navigation.addListener("focus", () => {
-    const item = route.params?.item;
-    if (item) {
-      const type: string = item.type;
-      setItemSet([...itemSet.filter((i) => i.type !== item.type), item]); //Remove items with the same type if they exist.
-      //navigation.setParams({ item: undefined }); //delete item after using.
-    }
+    setItemSet(storage.getItemSet());
   });
 
   getData("completed_sets").then((completed) =>
@@ -82,17 +79,24 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
       <View style={homeStyles.buttons}>
         <Button
           title="Shirt"
-          onPress={() => navigation.navigate("ClothingItem", { type: "shirt" })}
+          onPress={() => {
+            storage.setType("shirt");
+            navigation.navigate("ClothingItem");
+          }}
         />
-
         <Button
           title="Pants"
-          onPress={() => navigation.navigate("ClothingItem", { type: "pants" })}
+          onPress={() => {
+            storage.setType("pants");
+            navigation.navigate("ClothingItem");
+          }}
         />
-
         <Button
           title="Shoes"
-          onPress={() => navigation.navigate("ClothingItem", { type: "shoes" })}
+          onPress={() => {
+            storage.setType("shoes");
+            navigation.navigate("ClothingItem");
+          }}
         />
         <Text style={homeStyles.label}>
           Progress: {progress}/{CLOTHING_ITEMS_NUMBER}
@@ -140,10 +144,8 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
               setProgress(0);
-              navigation.navigate("Success", {
-                set: itemSet,
-                time: completionTimer.secondsPassed,
-              });
+              storage.setTime(completionTimer.secondsPassed);
+              navigation.navigate("Success");
               completionTimer.resetTimer();
             }}
           />
