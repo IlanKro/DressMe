@@ -15,9 +15,9 @@ export type ClothingItem = {
 };
 
 export type RootStackParamList = {
-  Home: { item: ClothingItem } | undefined;
-  Success: { set: ClothingItem[]; time: number };
-  ClothingItem: { type: string };
+  Home: undefined;
+  Success: undefined;
+  ClothingItem: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

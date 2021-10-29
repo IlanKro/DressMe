@@ -14,16 +14,21 @@ import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
 import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
+import { getUserstore } from "./storage";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
+  const storage = getUserstore();
+  const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const [image, setImage] = useState<string>("");
   const IMAGE_SIZE = 150;
   const SUCCESS_TEXT = "Success!";
   useEffect(() => {
     let mounted = true;
     if (mounted) {
+      setItemSet(storage.getItemSet());
+      storage.emptySet(); //once loaded into the success page the item set on storage can get emptied.
       fetch("https://source.unsplash.com/1600x900/?success")
         .then((responce) => setImage(responce.url))
         .catch((error) => {
@@ -36,7 +41,7 @@ export default function Success({ route, navigation }: SuccessProps) {
   }, []);
 
   const getShareableContent = () => {
-    return SUCCESS_TEXT + " " + JSON.stringify(route.params.set);
+    return SUCCESS_TEXT + " " + JSON.stringify(itemSet);
   };
 
   const copyToClipboard = async () => {
@@ -102,7 +107,7 @@ export default function Success({ route, navigation }: SuccessProps) {
 
         <Text style={successStyles.header}>{SUCCESS_TEXT}</Text>
         <Text style={successStyles.timer}>
-          Took you: {route.params.time} Seconds
+          Took you: {storage.getTime()} Seconds
         </Text>
       </View>
       <ScrollView style={successStyles.tableContainer}>
@@ -113,7 +118,7 @@ export default function Success({ route, navigation }: SuccessProps) {
             textStyle={successStyles.text}
           />
           <Rows
-            data={tableData(route.params.set)}
+            data={tableData(itemSet)}
             style={successStyles.row}
             textStyle={successStyles.text}
           />
@@ -125,7 +130,9 @@ export default function Success({ route, navigation }: SuccessProps) {
       <View style={successStyles.buttonPanel}>
         <Button
           title="Choose another set"
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
         />
         <Button title="Copy to clipboard" onPress={() => copyToClipboard()} />
       </View>

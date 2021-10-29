@@ -14,13 +14,15 @@ import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
+import { getUserstore } from "./storage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
 type SearchOptions = "name" | "brand" | "colors" | "sizes";
 
 export default function ClothingItemComponent({ route, navigation }: Props) {
-  const type = route.params.type;
+  const storage = getUserstore();
+  const type = storage.getType();
   navigation.setOptions({
     headerTitle: (props: any) => <LogoTitle {...props} />,
   });
@@ -169,7 +171,8 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
                   )[0]; //Ids are unique.
                   selectedItem.colors = [color];
                   selectedItem.sizes = [item.value.toString()];
-                  navigation.navigate("Home", { item: selectedItem });
+                  storage.addItem(selectedItem, type);
+                  navigation.navigate("Home");
                 },
               },
             ]

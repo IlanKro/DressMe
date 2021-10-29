@@ -18,11 +18,8 @@ class UserStore {
   emptySet = () => {
     this.itemSet = [];
   };
-  setProgress = (progress: number) => {
-    this.progress = progress;
-  };
   getProgress = () => {
-    return this.progress;
+    return this.itemSet.length;
   };
   getTime = () => {
     return this.time;
