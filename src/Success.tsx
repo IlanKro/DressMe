@@ -18,7 +18,7 @@ import { getUserstore } from "./storage";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
-export default function Success({ route, navigation }: SuccessProps) {
+export default function Success({ navigation }: SuccessProps) {
   const storage = getUserstore();
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const [image, setImage] = useState<string>("");

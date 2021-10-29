@@ -11,15 +11,12 @@ import { getUserstore } from "./storage";
 
 class Timer {
   secondsPassed: number = 0;
-
   constructor() {
     makeAutoObservable(this);
   }
-
   increaseTimer() {
     this.secondsPassed += 1;
   }
-
   resetTimer() {
     this.secondsPassed = 0;
   }
@@ -46,7 +43,7 @@ const getData = async (key: string) => {
 };
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
-export default function HomeScreen({ route, navigation }: HomeProps) {
+export default function HomeScreen({ navigation }: HomeProps) {
   const [progress, setProgress] = useState<number>(0);
   const [completedSets, setcompletedSets] = useState<number>(0);
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
