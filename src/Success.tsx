@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Button,
@@ -15,6 +15,15 @@ import { Table, Row, Rows } from "react-native-table-component";
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
+  const [image, setImage] = useState<string>();
+  useEffect(() => {
+    fetch("https://source.unsplash.com/1600x900/?success")
+      .then((responce) => setImage(responce.url))
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const tableHead = () => {
     return ["Type", "Name", "Brand", "Color", "Size"];
   };
@@ -40,7 +49,7 @@ export default function Success({ route, navigation }: SuccessProps) {
           source={{
             width: 200,
             height: 200,
-            uri: "https://source.unsplash.com/1600x900/?success",
+            uri: image,
           }}
         />
         <Text style={styles.header}>Success!</Text>
