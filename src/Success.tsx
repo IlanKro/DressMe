@@ -15,7 +15,7 @@ import { successStyles } from "./Styles";
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
 export default function Success({ route, navigation }: SuccessProps) {
-  const [image, setImage] = useState<string>();
+  const [image, setImage] = useState<string>("");
   useEffect(() => {
     fetch("https://source.unsplash.com/1600x900/?success")
       .then((responce) => setImage(responce.url))
@@ -46,12 +46,18 @@ export default function Success({ route, navigation }: SuccessProps) {
     <SafeAreaView style={successStyles.container}>
       <View style={successStyles.centeredContent}>
         <Image
-          source={{
-            width: 200,
-            height: 200,
-            uri: image,
-          }}
+          source={
+            image
+              ? {
+                  width: 200,
+                  height: 200,
+                  uri: image,
+                }
+              : require("../assets/Default_Image.png")
+          }
+          style={{ height: 200, width: 200, resizeMode: "stretch" }}
         />
+
         <Text style={successStyles.header}>Success!</Text>
         <Text style={successStyles.timer}>
           Took you: {route.params.time} Seconds
