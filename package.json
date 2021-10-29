@@ -8,7 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.15.9",
+    "@react-native-async-storage/async-storage": "^1.15.9",    
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@react-navigation/stack": "^6.0.11",
@@ -24,7 +24,9 @@
     "react-native-screens": "^3.8.0",
     "react-native-select-dropdown": "^1.2.0",
     "react-native-table-component": "^1.2.1",
-    "react-native-web": "0.17.1"
+    "react-native-toast-message": "^1.6.0",
+    "react-native-web": "0.17.1",
+    "expo-clipboard": "~2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

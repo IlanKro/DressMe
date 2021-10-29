@@ -96,4 +96,10 @@ export const successStyles = StyleSheet.create({
   columnTitle: { height: 50, backgroundColor: "#f1f8ff" },
   row: { height: 50 },
   text: { textAlign: "center" },
+  buttonPanel: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin: 20,
+  },
 });
