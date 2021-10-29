@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Button,
-  StyleSheet,
   Text,
   SafeAreaView,
   Image,
@@ -11,6 +10,7 @@ import {
 import { ClothingItem, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Table, Row, Rows } from "react-native-table-component";
+import { successStyles } from "./Styles";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
@@ -43,8 +43,8 @@ export default function Success({ route, navigation }: SuccessProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.centeredContent}>
+    <SafeAreaView style={successStyles.container}>
+      <View style={successStyles.centeredContent}>
         <Image
           source={{
             width: 200,
@@ -52,24 +52,26 @@ export default function Success({ route, navigation }: SuccessProps) {
             uri: image,
           }}
         />
-        <Text style={styles.header}>Success!</Text>
-        <Text style={styles.timer}>Took you: {route.params.time} Seconds</Text>
+        <Text style={successStyles.header}>Success!</Text>
+        <Text style={successStyles.timer}>
+          Took you: {route.params.time} Seconds
+        </Text>
       </View>
-      <ScrollView style={styles.tableContainer}>
-        <Table borderStyle={styles.tableBorder}>
+      <ScrollView style={successStyles.tableContainer}>
+        <Table borderStyle={successStyles.tableBorder}>
           <Row
             data={tableHead()}
-            style={styles.columnTitle}
-            textStyle={styles.text}
+            style={successStyles.columnTitle}
+            textStyle={successStyles.text}
           />
           <Rows
             data={tableData(route.params.set)}
-            style={styles.row}
-            textStyle={styles.text}
+            style={successStyles.row}
+            textStyle={successStyles.text}
           />
         </Table>
       </ScrollView>
-      <View style={styles.centeredContent}>
+      <View style={successStyles.centeredContent}>
         <Button
           title="Choose another set"
           onPress={() => navigation.navigate("Home")}
@@ -78,26 +80,3 @@ export default function Success({ route, navigation }: SuccessProps) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  header: {
-    fontSize: 35,
-  },
-  centeredContent: {
-    alignItems: "center",
-  },
-  timer: {
-    fontSize: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  tableContainer: {
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-  tableBorder: { borderWidth: 2, borderColor: "#c8e1ff" },
-  columnTitle: { height: 50, backgroundColor: "#f1f8ff" },
-  row: { height: 50 },
-  text: { textAlign: "center" },
-});

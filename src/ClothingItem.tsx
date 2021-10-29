@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   View,
-  StyleSheet,
   Text,
   SafeAreaView,
   FlatList,
@@ -14,6 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
+import { clothingStyles } from "./Styles";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 
@@ -33,13 +33,13 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
 
   function LogoTitle() {
     return (
-      <View style={styles.header}>
+      <View style={clothingStyles.header}>
         {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
         {type == "pants" && <Feather name="columns" size={32} color="blue" />}
         {type == "shoes" && (
           <MaterialCommunityIcons name="shoe-formal" size={32} color="blue" />
         )}
-        <Text style={styles.headerText}>{type}</Text>
+        <Text style={clothingStyles.headerText}>{type}</Text>
       </View>
     );
   }
@@ -105,7 +105,7 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
   };
 
   const Item = ({ name, brand, colors, id, sizes }: any) => (
-    <View style={styles.item}>
+    <View style={clothingStyles.item}>
       <Text>name: {name}</Text>
       <Text>brand: {brand}</Text>
       <Text>colors: </Text>
@@ -174,10 +174,10 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.searchBar}>
+    <SafeAreaView style={clothingStyles.container}>
+      <View style={clothingStyles.searchBar}>
         <TextInput
-          style={styles.searchBarText}
+          style={clothingStyles.searchBarText}
           defaultValue=""
           placeholder="search here..."
           onChangeText={setSearch}
@@ -191,12 +191,14 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
           rowTextForSelection={(item: SearchOptions) => {
             return item;
           }}
-          buttonStyle={styles.searchCategorySelect}
-          dropdownStyle={styles.searchCategorySelect}
+          buttonStyle={clothingStyles.searchCategorySelect}
+          dropdownStyle={clothingStyles.searchCategorySelect}
           defaultButtonText="Search By"
         />
       </View>
-      <Text style={styles.found}>found {filteredData.length} items</Text>
+      <Text style={clothingStyles.found}>
+        found {filteredData.length} items
+      </Text>
       {filteredData && (
         <FlatList
           data={filteredData}
@@ -207,44 +209,3 @@ export default function ClothingItemComponent({ route, navigation }: Props) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-  },
-  headerText: {
-    fontSize: 25,
-    alignSelf: "center",
-    fontWeight: "bold",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  item: {
-    borderColor: "black",
-    borderRadius: 2,
-    borderWidth: 2,
-    margin: 3,
-    flex: 2,
-  },
-  found: {
-    alignSelf: "center",
-  },
-  searchBar: {
-    flexDirection: "row",
-  },
-  searchBarText: {
-    borderWidth: 1,
-    width: 250,
-    flex: 0.7,
-    borderRadius: 20,
-    marginLeft: 20,
-    marginRight: 10,
-  },
-  searchCategorySelect: {
-    flex: 0.4,
-    borderRadius: 20,
-    marginLeft: 10,
-    marginRight: 20,
-  },
-});

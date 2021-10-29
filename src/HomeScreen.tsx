@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
+import { homeStyles } from "./Styles";
 
 class Timer {
   secondsPassed: number = 0;
@@ -75,10 +76,10 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Dress Me</Text>
-      <Text style={styles.label}>Sets completed: {completedSets}</Text>
-      <View style={styles.buttons}>
+    <SafeAreaView style={homeStyles.container}>
+      <Text style={homeStyles.header}>Dress Me</Text>
+      <Text style={homeStyles.label}>Sets completed: {completedSets}</Text>
+      <View style={homeStyles.buttons}>
         <Button
           title="Shirt"
           onPress={() => navigation.navigate("ClothingItem", { type: "shirt" })}
@@ -93,10 +94,10 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
           title="Shoes"
           onPress={() => navigation.navigate("ClothingItem", { type: "shoes" })}
         />
-        <Text style={styles.label}>
+        <Text style={homeStyles.label}>
           Progress: {progress}/{CLOTHING_ITEMS_NUMBER}
         </Text>
-        <View style={styles.icons}>
+        <View style={homeStyles.icons}>
           <Ionicons
             name="shirt"
             size={32}
@@ -126,13 +127,13 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
           />
         </View>
         <Progress.Bar
-          style={styles.progress_bar}
+          style={homeStyles.progress_bar}
           progress={progress / CLOTHING_ITEMS_NUMBER}
           width={200}
         />
       </View>
       {progress === 3 && (
-        <SafeAreaView style={styles.done_button}>
+        <SafeAreaView style={homeStyles.done_button}>
           <Button
             title="Finish!"
             onPress={() => {
@@ -151,36 +152,3 @@ export default function HomeScreen({ route, navigation }: HomeProps) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    fontSize: 35,
-  },
-  label: {
-    fontSize: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    alignItems: "center",
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  buttons: {
-    flex: 0.5,
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  progress_bar: {
-    borderColor: "black",
-    marginTop: 10,
-  },
-  done_button: {
-    marginBottom: 20,
-    marginTop: 50,
-  },
-  icons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
