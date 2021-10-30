@@ -30,4 +30,4 @@ Free of use for whoever would like to, it's mostly a practice project, if you us
 ## Acknowledgments
 
 -Can't trace up every source that helped me mostly React Native documentation and Youtube but,
-Special thanks to [@programming with Mosh] (https://www.youtube.com/watch?v=0-S5a0eXPoc) - for helping me getting started on this project.
+Special thanks to [@programming with Mosh](https://www.youtube.com/watch?v=0-S5a0eXPoc) - for helping me getting started on this project.
