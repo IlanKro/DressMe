@@ -14,7 +14,7 @@ import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
-import { getUserstore } from "./storage";
+import { getUserstore } from "./Storage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
 

@@ -14,7 +14,7 @@ import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
 import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
-import { getUserstore } from "./storage";
+import { getUserstore } from "./Storage";
 
 type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 

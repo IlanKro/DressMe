@@ -7,7 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
-import { getUserstore } from "./storage";
+import { getUserstore } from "./Storage";
 
 class Timer {
   secondsPassed: number = 0;
