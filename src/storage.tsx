@@ -2,6 +2,7 @@ import { ClothingItem } from "../App";
 
 type itemType = "" | "shirt" | "shoes" | "pants";
 
+//Saving "global" variables in a singelton storage.
 class UserStore {
   itemSet: ClothingItem[] = [];
   progress: number = 0;
