@@ -1,7 +1,7 @@
 import { ClothingItem } from "../App";
 
-type itemType = "" | "shirt" | "shoes" | "pants";
-
+export const CLOTHING_ITEMS_NUMBER = 3;
+export type itemType = "" | "shirt" | "shoes" | "pants";
 //Saving "global" variables in a singelton storage.
 class UserStore {
   itemSet: ClothingItem[] = [];
@@ -35,7 +35,9 @@ class UserStore {
     this.itemType = itemType;
   };
 }
-let userStore: UserStore; //Singelton userstorage.
+
+let userStore: UserStore;
+
 export function getUserstore() {
   if (!userStore) userStore = new UserStore();
   return userStore;

@@ -8,29 +8,27 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { ClothingItem, RootStackParamList } from "../App";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ClothingItem } from "../App";
 import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
-import { getUserstore } from "./Storage";
-
-type Props = NativeStackScreenProps<RootStackParamList, "ClothingItem">;
+import { getUserstore, itemType } from "./Storage";
 
 type SearchOptions = "name" | "brand" | "colors" | "sizes";
 
-export default function ClothingItemComponent({ navigation }: Props) {
-  const storage = getUserstore();
-  const type = storage.getType();
+const storage = getUserstore();
+
+export default function ClothingItemComponent({ navigation }: any) {
   const [search, setSearch] = useState<string>("");
   const [searchCategory, setSearchCategory] = useState<SearchOptions>("name");
   const [filteredData, setFilteredData] = useState<ClothingItem[]>([]);
   const [data, setData] = useState<ClothingItem[]>([]);
   const [color, setColor] = useState<string>("");
   const [selected, setSelected] = useState<string>("");
+  const [type, setType] = useState<itemType>("");
 
-  function LogoTitle() {
+  function LogoTitle({ type }: any) {
     return (
       <View style={clothingStyles.header}>
         {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
@@ -45,9 +43,14 @@ export default function ClothingItemComponent({ navigation }: Props) {
 
   useEffect(() => {
     let mounted = true;
+    navigation.addListener("willBlur", () => {
+      setType(itemtype);
+    });
+    const itemtype = storage.getType(); //needed cause set state isn't immediate.
+    setType(itemtype);
     if (mounted) {
       navigation.setOptions({
-        headerTitle: (props: any) => <LogoTitle {...props} />,
+        headerTitle: (props: any) => <LogoTitle {...props} type={itemtype} />,
       });
       fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
         .then((response) => response.json())
@@ -56,7 +59,7 @@ export default function ClothingItemComponent({ navigation }: Props) {
           for (let i = 0; i < data.results.length; i++) {
             items.push(data.results[i]);
           }
-          items = items.filter((item) => item["type"] == type);
+          items = items.filter((item) => item["type"] == itemtype);
           items.sort(sortByProperty("name"));
           //Remove duplicate ids I found some in the mock data, in actual apps the database should avoid duplicate primary keys
           items = [...new Set(items)];
@@ -70,7 +73,7 @@ export default function ClothingItemComponent({ navigation }: Props) {
     return function cleanup() {
       mounted = false;
     };
-  }, []);
+  }, [storage.itemType]);
 
   const queryItems = () => {
     return ["name", "brand"].includes(searchCategory)

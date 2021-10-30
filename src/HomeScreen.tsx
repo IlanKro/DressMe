@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Button, StyleSheet, Text, View, SafeAreaView } from "react-native";
-import { RootStackParamList, ClothingItem } from "../App";
+import { Button, Text, View, SafeAreaView } from "react-native";
+import { ClothingItem } from "../App"; //RootStackParamList
 import * as Progress from "react-native-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
-import { getUserstore } from "./Storage";
+import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
+import { AppDrawer } from "./Drawer";
 
 class Timer {
   secondsPassed: number = 0;
@@ -22,7 +23,7 @@ class Timer {
   }
 }
 
-const completionTimer = new Timer();
+export const completionTimer = new Timer();
 setInterval(() => {
   completionTimer.increaseTimer();
 }, 1000);
@@ -41,14 +42,26 @@ const getData = async (key: string) => {
     console.log(error);
   }
 };
-type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
+//type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
-export default function HomeScreen({ navigation }: HomeProps) {
+export default function HomeScreen({ navigation }: any) {
   const [progress, setProgress] = useState<number>(0);
   const [completedSets, setcompletedSets] = useState<number>(0);
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
-  const CLOTHING_ITEMS_NUMBER = 3;
   const storage = getUserstore();
+
+  useEffect(() => {
+    let mounted = true;
+    navigation.addListener("focus", () => {
+      setItemSet(storage.getItemSet());
+    });
+    if (mounted) {
+      setItemSet(storage.getItemSet());
+    }
+    return function cleanup() {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     setProgress(storage.getProgress());
@@ -57,13 +70,8 @@ export default function HomeScreen({ navigation }: HomeProps) {
   useEffect(() => {
     return function emptyItemSet() {
       setProgress(storage.getProgress());
-      setItemSet([]);
     };
   }, [completedSets]);
-
-  navigation.addListener("focus", () => {
-    setItemSet(storage.getItemSet());
-  });
 
   getData("completed_sets").then((completed) =>
     setcompletedSets(completed ? parseInt(completed) : 0)
