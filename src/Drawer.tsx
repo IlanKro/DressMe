@@ -3,13 +3,13 @@ import {
   DrawerContentScrollView,
   DrawerItem,
   createDrawerNavigator,
-  DrawerScreenProps,
 } from "@react-navigation/drawer";
-
+import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import HomeScreen from "./HomeScreen";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import ClothingItemComponent from "./ClothingItem";
 import Success from "./Success";
+import { CommonActions } from "@react-navigation/native";
 
 export type RootDrawerParamList = {
   Home: undefined;
@@ -18,7 +18,6 @@ export type RootDrawerParamList = {
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
-type DrawerProps = DrawerScreenProps<RootDrawerParamList>; //Handle later.
 
 export function AppDrawer() {
   return (
@@ -48,34 +47,60 @@ function DrawerContent({ navigation }: any) {
     <DrawerContentScrollView>
       <DrawerItem
         label="Home"
+        icon={() => <Ionicons name="home" size={32} color="black" />}
         onPress={() => {
           navigation.navigate("Home");
         }}
       />
       <DrawerItem
         label="Shirt"
+        icon={() => <Ionicons name="shirt" size={32} color="black" />}
         onPress={() => {
           storage.setType("shirt");
-          navigation.navigate("ClothingItem");
+          //navigation.navigate("ClothingItem");
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "ClothingItem" }],
+            })
+          );
         }}
       />
       <DrawerItem
         label="Pants"
+        icon={() => <Feather name="columns" size={32} color="black" />}
         onPress={() => {
           storage.setType("pants");
-          navigation.navigate("ClothingItem");
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "ClothingItem" }],
+            })
+          );
         }}
       />
       <DrawerItem
         label="Shoes"
+        icon={() => (
+          <MaterialCommunityIcons name="shoe-formal" size={32} color="black" />
+        )}
         onPress={() => {
           storage.setType("shoes");
-          navigation.navigate("ClothingItem");
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "ClothingItem" }],
+            })
+          );
         }}
       />
       {storage.getProgress() === CLOTHING_ITEMS_NUMBER && (
         <DrawerItem
           label="Finish"
+          icon={() => (
+            <Ionicons
+              name="md-checkmark-circle-sharp"
+              size={32}
+              color="green"
+            />
+          )}
           onPress={() => {
             storage.setTime(100);
             navigation.navigate("Success");

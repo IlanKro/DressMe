@@ -43,9 +43,6 @@ export default function ClothingItemComponent({ navigation }: any) {
 
   useEffect(() => {
     let mounted = true;
-    navigation.addListener("willBlur", () => {
-      setType(itemtype);
-    });
     const itemtype = storage.getType(); //needed cause set state isn't immediate.
     setType(itemtype);
     if (mounted) {
