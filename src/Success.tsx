@@ -8,8 +8,7 @@ import {
   ScrollView,
   Share,
 } from "react-native";
-import { ClothingItem } from "../App"; //RootStackParamList
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ClothingItem } from "./ClothingItem";
 import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
 import Toast from "react-native-toast-message";

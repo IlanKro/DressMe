@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, Text, View, SafeAreaView } from "react-native";
-import { ClothingItem } from "../App"; //RootStackParamList
+import { ClothingItem } from "./ClothingItem";
 import * as Progress from "react-native-progress";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import { storeData, getData } from "./util/util";

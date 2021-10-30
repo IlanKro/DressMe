@@ -1,20 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export function addIndex(list: any[]) {
+export const addIndex = (list: any[]) => {
   let newList = [];
   for (let i = 0; i < list.length; i++) {
     newList.push({ id: i, value: list[i] });
   }
   return newList;
-}
-export function sortByProperty(property: string) {
+};
+export const sortByProperty = (property: string) => {
   return function (a: any, b: any) {
     if (a[property] > b[property]) return 1;
     else if (a[property] < b[property]) return -1;
 
     return 0;
   };
-}
+};
 
 export const storeData = async (key: string, value: string) => {
   try {

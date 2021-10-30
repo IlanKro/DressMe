@@ -8,13 +8,20 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { ClothingItem } from "../App";
 import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
 import { getUserstore, itemType } from "./Storage";
 
+export type ClothingItem = {
+  id: number;
+  type: string;
+  name: string;
+  colors: string[];
+  sizes: number[];
+  brand: string;
+};
 type SearchOptions = "name" | "brand" | "colors" | "sizes";
 
 const storage = getUserstore();
@@ -28,7 +35,7 @@ export default function ClothingItemComponent({ navigation }: any) {
   const [selected, setSelected] = useState<string>("");
   const [type, setType] = useState<itemType>("");
 
-  function LogoTitle({ type }: any) {
+  const LogoTitle = ({ type }: any) => {
     return (
       <View style={clothingStyles.header}>
         {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
@@ -39,7 +46,7 @@ export default function ClothingItemComponent({ navigation }: any) {
         <Text style={clothingStyles.headerText}>{type}</Text>
       </View>
     );
-  }
+  };
 
   useEffect(() => {
     let mounted = true;
