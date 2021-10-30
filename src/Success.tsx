@@ -8,7 +8,7 @@ import {
   ScrollView,
   Share,
 } from "react-native";
-import { ClothingItem, RootStackParamList } from "../App";
+import { ClothingItem } from "../App"; //RootStackParamList
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
@@ -16,9 +16,9 @@ import Toast from "react-native-toast-message";
 import * as Clipboard from "expo-clipboard";
 import { getUserstore } from "./Storage";
 
-type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
+//type SuccessProps = NativeStackScreenProps<RootStackParamList, "Success">;
 
-export default function Success({ navigation }: SuccessProps) {
+export default function Success({ navigation }: any) {
   const storage = getUserstore();
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const [image, setImage] = useState<string>("");
@@ -27,8 +27,8 @@ export default function Success({ navigation }: SuccessProps) {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      setItemSet(storage.getItemSet());
-      storage.emptySet(); //once loaded into the success page the item set on storage can get emptied.
+      setItemSet(storage.itemSet);
+      storage.itemSet = []; //once loaded into the success page the item set on storage can get emptied.
       fetch("https://source.unsplash.com/1600x900/?success")
         .then((responce) => setImage(responce.url))
         .catch((error) => {
@@ -38,7 +38,7 @@ export default function Success({ navigation }: SuccessProps) {
     return function cleanup() {
       mounted = false;
     };
-  }, []);
+  }, [storage]);
 
   const getShareableContent = () => {
     return SUCCESS_TEXT + " " + JSON.stringify(itemSet);
@@ -107,7 +107,7 @@ export default function Success({ navigation }: SuccessProps) {
 
         <Text style={successStyles.header}>{SUCCESS_TEXT}</Text>
         <Text style={successStyles.timer}>
-          Took you: {storage.getTime()} Seconds
+          Took you: {storage.time} Seconds
         </Text>
       </View>
       <ScrollView style={successStyles.tableContainer}>

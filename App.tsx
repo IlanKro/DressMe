@@ -1,9 +1,7 @@
+import "react-native-gesture-handler";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./src/HomeScreen";
-import ClothingItemComponent from "./src/ClothingItem";
-import Success from "./src/Success";
+import { AppDrawer } from "./src/Drawer";
 
 export type ClothingItem = {
   id: number;
@@ -14,22 +12,10 @@ export type ClothingItem = {
   brand: string;
 };
 
-export type RootStackParamList = {
-  Home: undefined;
-  Success: undefined;
-  ClothingItem: undefined;
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ClothingItem" component={ClothingItemComponent} />
-        <Stack.Screen name="Success" component={Success} />
-      </Stack.Navigator>
+      <AppDrawer />
     </NavigationContainer>
   );
 }

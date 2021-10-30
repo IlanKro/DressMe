@@ -1,54 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Button, StyleSheet, Text, View, SafeAreaView } from "react-native";
-import { RootStackParamList, ClothingItem } from "../App";
+import { Button, Text, View, SafeAreaView } from "react-native";
+import { ClothingItem } from "../App"; //RootStackParamList
 import * as Progress from "react-native-progress";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
-import { getUserstore } from "./Storage";
+import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
+import { storeData, getData } from "./util/util";
+import { completionTimer } from "./util/Timer";
 
-class Timer {
-  secondsPassed: number = 0;
-  constructor() {
-    makeAutoObservable(this);
-  }
-  increaseTimer() {
-    this.secondsPassed += 1;
-  }
-  resetTimer() {
-    this.secondsPassed = 0;
-  }
-}
-
-const completionTimer = new Timer();
-setInterval(() => {
-  completionTimer.increaseTimer();
-}, 1000);
-
-const storeData = async (key: string, value: string) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getData = async (key: string) => {
-  try {
-    return await AsyncStorage.getItem(key);
-  } catch (error) {
-    console.log(error);
-  }
-};
-type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
-
-export default function HomeScreen({ navigation }: HomeProps) {
+export default function HomeScreen({ navigation }: any) {
   const [progress, setProgress] = useState<number>(0);
   const [completedSets, setcompletedSets] = useState<number>(0);
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
-  const CLOTHING_ITEMS_NUMBER = 3;
   const storage = getUserstore();
+
+  useEffect(() => {
+    let mounted = true;
+    navigation.addListener("focus", () => {
+      setItemSet(storage.itemSet);
+    });
+    if (mounted) {
+      setItemSet(storage.itemSet);
+    }
+    return function cleanup() {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     setProgress(storage.getProgress());
@@ -57,17 +35,14 @@ export default function HomeScreen({ navigation }: HomeProps) {
   useEffect(() => {
     return function emptyItemSet() {
       setProgress(storage.getProgress());
-      setItemSet([]);
     };
   }, [completedSets]);
 
-  navigation.addListener("focus", () => {
-    setItemSet(storage.getItemSet());
+  getData("completed_sets").then((completed) => {
+    const sets = completed ? parseInt(completed) : 0;
+    setcompletedSets(sets);
+    storage.completedSets = sets;
   });
-
-  getData("completed_sets").then((completed) =>
-    setcompletedSets(completed ? parseInt(completed) : 0)
-  );
 
   return (
     <SafeAreaView style={homeStyles.container}>
@@ -77,21 +52,21 @@ export default function HomeScreen({ navigation }: HomeProps) {
         <Button
           title="Shirt"
           onPress={() => {
-            storage.setType("shirt");
+            storage.itemType = "shirt";
             navigation.navigate("ClothingItem");
           }}
         />
         <Button
           title="Pants"
           onPress={() => {
-            storage.setType("pants");
+            storage.itemType = "pants";
             navigation.navigate("ClothingItem");
           }}
         />
         <Button
           title="Shoes"
           onPress={() => {
-            storage.setType("shoes");
+            storage.itemType = "shoes";
             navigation.navigate("ClothingItem");
           }}
         />
@@ -140,8 +115,9 @@ export default function HomeScreen({ navigation }: HomeProps) {
             onPress={() => {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
+              storage.completedSets = completedSets + 1;
               setProgress(0);
-              storage.setTime(completionTimer.secondsPassed);
+              storage.time = completionTimer.secondsPassed;
               navigation.navigate("Success");
               completionTimer.resetTimer();
             }}
