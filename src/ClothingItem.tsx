@@ -43,7 +43,7 @@ export default function ClothingItemComponent({ navigation }: any) {
 
   useEffect(() => {
     let mounted = true;
-    const itemtype = storage.getType(); //needed cause set state isn't immediate.
+    const itemtype = storage.itemType; //needed cause set state isn't immediate.
     setType(itemtype);
     if (mounted) {
       navigation.setOptions({

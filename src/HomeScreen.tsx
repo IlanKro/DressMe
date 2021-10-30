@@ -53,10 +53,10 @@ export default function HomeScreen({ navigation }: any) {
   useEffect(() => {
     let mounted = true;
     navigation.addListener("focus", () => {
-      setItemSet(storage.getItemSet());
+      setItemSet(storage.itemSet);
     });
     if (mounted) {
-      setItemSet(storage.getItemSet());
+      setItemSet(storage.itemSet);
     }
     return function cleanup() {
       mounted = false;
@@ -85,21 +85,21 @@ export default function HomeScreen({ navigation }: any) {
         <Button
           title="Shirt"
           onPress={() => {
-            storage.setType("shirt");
+            storage.itemType = "shirt";
             navigation.navigate("ClothingItem");
           }}
         />
         <Button
           title="Pants"
           onPress={() => {
-            storage.setType("pants");
+            storage.itemType = "pants";
             navigation.navigate("ClothingItem");
           }}
         />
         <Button
           title="Shoes"
           onPress={() => {
-            storage.setType("shoes");
+            storage.itemType = "shoes";
             navigation.navigate("ClothingItem");
           }}
         />
@@ -149,7 +149,7 @@ export default function HomeScreen({ navigation }: any) {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
               setProgress(0);
-              storage.setTime(completionTimer.secondsPassed);
+              storage.time = completionTimer.secondsPassed;
               navigation.navigate("Success");
               completionTimer.resetTimer();
             }}

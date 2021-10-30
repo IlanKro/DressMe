@@ -27,8 +27,8 @@ export default function Success({ navigation }: any) {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      setItemSet(storage.getItemSet());
-      storage.emptySet(); //once loaded into the success page the item set on storage can get emptied.
+      setItemSet(storage.itemSet);
+      storage.itemSet = []; //once loaded into the success page the item set on storage can get emptied.
       fetch("https://source.unsplash.com/1600x900/?success")
         .then((responce) => setImage(responce.url))
         .catch((error) => {
@@ -107,7 +107,7 @@ export default function Success({ navigation }: any) {
 
         <Text style={successStyles.header}>{SUCCESS_TEXT}</Text>
         <Text style={successStyles.timer}>
-          Took you: {storage.getTime()} Seconds
+          Took you: {storage.time} Seconds
         </Text>
       </View>
       <ScrollView style={successStyles.tableContainer}>
