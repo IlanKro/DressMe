@@ -10,6 +10,7 @@ import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import ClothingItemComponent from "./ClothingItem";
 import Success from "./Success";
 import { CommonActions } from "@react-navigation/native";
+import { storeData } from "./util/util";
 
 export type RootDrawerParamList = {
   Home: undefined;
@@ -103,6 +104,8 @@ function DrawerContent({ navigation }: any) {
           )}
           onPress={() => {
             storage.time = 100;
+            storage.completedSets = storage.completedSets + 1;
+            storeData("completed_sets", String(storage.completedSets));
             navigation.navigate("Success");
           }}
         />

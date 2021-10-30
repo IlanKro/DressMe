@@ -55,9 +55,11 @@ export default function HomeScreen({ navigation }: any) {
     };
   }, [completedSets]);
 
-  getData("completed_sets").then((completed) =>
-    setcompletedSets(completed ? parseInt(completed) : 0)
-  );
+  getData("completed_sets").then((completed) => {
+    const sets = completed ? parseInt(completed) : 0;
+    setcompletedSets(sets);
+    storage.completedSets = sets;
+  });
 
   return (
     <SafeAreaView style={homeStyles.container}>
@@ -130,6 +132,7 @@ export default function HomeScreen({ navigation }: any) {
             onPress={() => {
               storeData("completed_sets", String(completedSets + 1));
               setcompletedSets(completedSets + 1);
+              storage.completedSets = completedSets + 1;
               setProgress(0);
               storage.time = completionTimer.secondsPassed;
               navigation.navigate("Success");
