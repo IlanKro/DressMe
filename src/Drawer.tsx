@@ -4,7 +4,11 @@ import {
   DrawerItem,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
-import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import HomeScreen from "./HomeScreen";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import ClothingItemComponent from "./ClothingItem";
@@ -69,7 +73,14 @@ const DrawerContent = ({ navigation }: any) => {
       />
       <DrawerItem
         label="Pants"
-        icon={() => <Feather name="columns" size={32} color="black" />}
+        icon={() => (
+          <FontAwesome5
+            name="greater-than"
+            style={{ transform: [{ rotate: "270deg" }] }}
+            size={32}
+            color="black"
+          />
+        )}
         onPress={() => {
           storage.itemType = "pants";
           navigation.dispatch(
