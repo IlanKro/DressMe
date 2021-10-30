@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export function addIndex(list: any[]) {
   let newList = [];
   for (let i = 0; i < list.length; i++) {
@@ -13,3 +15,18 @@ export function sortByProperty(property: string) {
     return 0;
   };
 }
+
+export const storeData = async (key: string, value: string) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getData = async (key: string) => {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch (error) {
+    console.log(error);
+  }
+};

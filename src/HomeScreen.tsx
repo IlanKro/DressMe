@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Text, View, SafeAreaView } from "react-native";
 import { ClothingItem } from "../App"; //RootStackParamList
 import * as Progress from "react-native-progress";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
-import { AppDrawer } from "./Drawer";
+import { storeData, getData } from "./util/util";
 
 class Timer {
   secondsPassed: number = 0;
@@ -27,22 +25,6 @@ export const completionTimer = new Timer();
 setInterval(() => {
   completionTimer.increaseTimer();
 }, 1000);
-
-const storeData = async (key: string, value: string) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getData = async (key: string) => {
-  try {
-    return await AsyncStorage.getItem(key);
-  } catch (error) {
-    console.log(error);
-  }
-};
-//type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export default function HomeScreen({ navigation }: any) {
   const [progress, setProgress] = useState<number>(0);

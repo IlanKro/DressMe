@@ -56,7 +56,7 @@ function DrawerContent({ navigation }: any) {
         label="Shirt"
         icon={() => <Ionicons name="shirt" size={32} color="black" />}
         onPress={() => {
-          storage.setType("shirt");
+          storage.itemType = "shirt";
           //navigation.navigate("ClothingItem");
           navigation.dispatch(
             CommonActions.reset({
@@ -69,7 +69,7 @@ function DrawerContent({ navigation }: any) {
         label="Pants"
         icon={() => <Feather name="columns" size={32} color="black" />}
         onPress={() => {
-          storage.setType("pants");
+          storage.itemType = "pants";
           navigation.dispatch(
             CommonActions.reset({
               routes: [{ name: "ClothingItem" }],
@@ -83,7 +83,7 @@ function DrawerContent({ navigation }: any) {
           <MaterialCommunityIcons name="shoe-formal" size={32} color="black" />
         )}
         onPress={() => {
-          storage.setType("shoes");
+          storage.itemType = "shoes";
           navigation.dispatch(
             CommonActions.reset({
               routes: [{ name: "ClothingItem" }],
@@ -102,7 +102,7 @@ function DrawerContent({ navigation }: any) {
             />
           )}
           onPress={() => {
-            storage.setTime(100);
+            storage.time = 100;
             navigation.navigate("Success");
           }}
         />
