@@ -8,8 +8,7 @@ import {
   ScrollView,
   Share,
 } from "react-native";
-import { ClothingItem } from "../App"; //RootStackParamList
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ClothingItem } from "./ClothingItem";
 import { Table, Row, Rows } from "react-native-table-component";
 import { successStyles } from "./Styles";
 import Toast from "react-native-toast-message";
@@ -24,13 +23,18 @@ export default function Success({ navigation }: any) {
   const [image, setImage] = useState<string>("");
   const IMAGE_SIZE = 150;
   const SUCCESS_TEXT = "Success!";
+  //Loads success Image.
   useEffect(() => {
     let mounted = true;
     if (mounted) {
       setItemSet(storage.itemSet);
       storage.itemSet = []; //once loaded into the success page the item set on storage can get emptied.
       fetch("https://source.unsplash.com/1600x900/?success")
-        .then((responce) => setImage(responce.url))
+        .then((response) =>
+          mounted
+            ? setImage(response.url)
+            : console.log("Couldn't update image.")
+        )
         .catch((error) => {
           console.log(error);
         });
@@ -40,10 +44,12 @@ export default function Success({ navigation }: any) {
     };
   }, [storage]);
 
+  //returns the content to share in clipboard or via the interface.
   const getShareableContent = () => {
     return SUCCESS_TEXT + " " + JSON.stringify(itemSet);
   };
 
+  //Copies the shareable content to clipboard.
   const copyToClipboard = async () => {
     Clipboard.setString(getShareableContent());
     if ((await Clipboard.getStringAsync()) === getShareableContent()) {
@@ -58,6 +64,7 @@ export default function Success({ navigation }: any) {
     }
   };
 
+  //Shares shareable content via phone interface.
   const onShare = async () => {
     try {
       await Share.share({
@@ -68,10 +75,12 @@ export default function Success({ navigation }: any) {
     }
   };
 
+  //The argument on top of the table.
   const tableHead = () => {
     return ["Type", "Name", "Brand", "Color", "Size"];
   };
 
+  //The data the table gets.
   const tableData = (collection: ClothingItem[]) => {
     let tableData: any[][] = [];
     collection.forEach((element) => {

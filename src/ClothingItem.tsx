@@ -8,16 +8,21 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { ClothingItem } from "../App";
 import { addIndex, sortByProperty } from "./util/util";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
 import { getUserstore, itemType } from "./Storage";
 
+export type ClothingItem = {
+  id: number;
+  type: string;
+  name: string;
+  colors: string[];
+  sizes: number[];
+  brand: string;
+};
 type SearchOptions = "name" | "brand" | "colors" | "sizes";
-
-const storage = getUserstore();
 
 export default function ClothingItemComponent({ navigation }: any) {
   const [search, setSearch] = useState<string>("");
@@ -27,8 +32,10 @@ export default function ClothingItemComponent({ navigation }: any) {
   const [color, setColor] = useState<string>("");
   const [selected, setSelected] = useState<string>("");
   const [type, setType] = useState<itemType>("");
+  const storage = getUserstore();
 
-  function LogoTitle({ type }: any) {
+  //Adds icon and clothItem type to the header.
+  const IconTitle = ({ type }: any) => {
     return (
       <View style={clothingStyles.header}>
         {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
@@ -39,15 +46,16 @@ export default function ClothingItemComponent({ navigation }: any) {
         <Text style={clothingStyles.headerText}>{type}</Text>
       </View>
     );
-  }
+  };
 
+  //Loads data from mock directory and filters it to the page type.
   useEffect(() => {
     let mounted = true;
     const itemtype = storage.itemType; //needed cause set state isn't immediate.
     setType(itemtype);
     if (mounted) {
       navigation.setOptions({
-        headerTitle: (props: any) => <LogoTitle {...props} type={itemtype} />,
+        headerTitle: (props: any) => <IconTitle {...props} type={itemtype} />,
       });
       fetch("http://www.mocky.io/v2/5e3940013200005e00ddf87e?mocky-delay=600ms")
         .then((response) => response.json())
@@ -72,6 +80,7 @@ export default function ClothingItemComponent({ navigation }: any) {
     };
   }, [storage.itemType]);
 
+  //Queries the items for the search functionality.
   const queryItems = () => {
     return ["name", "brand"].includes(searchCategory)
       ? data.filter((item) =>
@@ -90,6 +99,7 @@ export default function ClothingItemComponent({ navigation }: any) {
         );
   };
 
+  //Controls the search and changes the data shown.
   useEffect(() => {
     if (search === "") {
       setFilteredData(data);
@@ -100,6 +110,7 @@ export default function ClothingItemComponent({ navigation }: any) {
     }
   }, [search]);
 
+  //Renders a single item.
   const renderItem = ({ item }: any) => {
     return (
       <Item
@@ -112,6 +123,7 @@ export default function ClothingItemComponent({ navigation }: any) {
     );
   };
 
+  //The item JSX elements.
   const Item = ({ name, brand, colors, id, sizes }: any) => (
     <View style={clothingStyles.item}>
       <Text>name: {name}</Text>
@@ -138,6 +150,7 @@ export default function ClothingItemComponent({ navigation }: any) {
     </View>
   );
 
+  //renders a single color button, the id is to locate which ittem is being selected.
   const renderColorButton = ({ item }: any, id: string) => {
     return (
       <Button
@@ -151,6 +164,7 @@ export default function ClothingItemComponent({ navigation }: any) {
     );
   };
 
+  //renders a single sizes button, once pressed the item will be added to  the storage collection.
   const renderSizesButton = ({ item }: any) => {
     return (
       <Button

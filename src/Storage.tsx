@@ -1,4 +1,4 @@
-import { ClothingItem } from "../App";
+import { ClothingItem } from "./ClothingItem";
 
 export const CLOTHING_ITEMS_NUMBER = 3;
 export type itemType = "" | "shirt" | "shoes" | "pants";
@@ -9,9 +9,11 @@ class UserStore {
   time: number = 0;
   itemType: itemType = "";
   completedSets: number = 0;
+  // adding an item to the set making sure that if the type exists it overrides it.
   addItem = (item: ClothingItem, type: string) => {
     this.itemSet = [...this.itemSet.filter((i) => i.type !== type), item];
   };
+  //Get the progress of the set.
   getProgress = () => {
     return this.itemSet.length;
   };

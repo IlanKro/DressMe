@@ -21,7 +21,7 @@ export type RootDrawerParamList = {
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
-export function AppDrawer() {
+export const AppDrawer = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen
@@ -41,9 +41,9 @@ export function AppDrawer() {
       />
     </Drawer.Navigator>
   );
-}
+};
 
-function DrawerContent({ navigation }: any) {
+const DrawerContent = ({ navigation }: any) => {
   const storage = getUserstore();
   return (
     <DrawerContentScrollView>
@@ -114,4 +114,4 @@ function DrawerContent({ navigation }: any) {
       )}
     </DrawerContentScrollView>
   );
-}
+};

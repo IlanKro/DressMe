@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, Text, View, SafeAreaView } from "react-native";
-import { ClothingItem } from "../App"; //RootStackParamList
+import { ClothingItem } from "./ClothingItem";
 import * as Progress from "react-native-progress";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import { storeData, getData } from "./util/util";
@@ -15,11 +14,9 @@ export default function HomeScreen({ navigation }: any) {
   const [itemSet, setItemSet] = useState<ClothingItem[]>([]);
   const storage = getUserstore();
 
+  //On load set the items.
   useEffect(() => {
     let mounted = true;
-    navigation.addListener("focus", () => {
-      setItemSet(storage.itemSet);
-    });
     if (mounted) {
       setItemSet(storage.itemSet);
     }
@@ -32,12 +29,14 @@ export default function HomeScreen({ navigation }: any) {
     setProgress(storage.getProgress());
   }, [itemSet]);
 
+  //When a set is completed empty the set of Items.
   useEffect(() => {
     return function emptyItemSet() {
       setProgress(storage.getProgress());
     };
   }, [completedSets]);
 
+  //Get the completed items from local storage and set it to the component and to the run storage.
   getData("completed_sets").then((completed) => {
     const sets = completed ? parseInt(completed) : 0;
     setcompletedSets(sets);
