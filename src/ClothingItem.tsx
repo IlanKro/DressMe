@@ -9,7 +9,11 @@ import {
   TextInput,
 } from "react-native";
 import { addIndex, sortByProperty } from "./util/util";
-import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import { clothingStyles } from "./Styles";
 import { getUserstore, itemType } from "./Storage";
@@ -39,7 +43,14 @@ export default function ClothingItemComponent({ navigation }: any) {
     return (
       <View style={clothingStyles.header}>
         {type == "shirt" && <Ionicons name="shirt" size={32} color="blue" />}
-        {type == "pants" && <Feather name="columns" size={32} color="blue" />}
+        {type == "pants" && (
+          <FontAwesome5
+            name="greater-than"
+            style={{ transform: [{ rotate: "270deg" }] }}
+            size={32}
+            color="blue"
+          />
+        )}
         {type == "shoes" && (
           <MaterialCommunityIcons name="shoe-formal" size={32} color="blue" />
         )}

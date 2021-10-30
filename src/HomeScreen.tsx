@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Text, View, SafeAreaView } from "react-native";
 import { ClothingItem } from "./ClothingItem";
 import * as Progress from "react-native-progress";
-import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import { homeStyles } from "./Styles";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import { storeData, getData } from "./util/util";
@@ -82,8 +86,9 @@ export default function HomeScreen({ navigation }: any) {
                 : "grey"
             }
           />
-          <Feather
-            name="columns"
+          <FontAwesome5
+            name="greater-than"
+            style={{ transform: [{ rotate: "270deg" }] }}
             size={32}
             color={
               itemSet.findIndex((i) => i.type === "pants") != -1
