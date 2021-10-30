@@ -7,24 +7,7 @@ import { makeAutoObservable } from "mobx";
 import { homeStyles } from "./Styles";
 import { getUserstore, CLOTHING_ITEMS_NUMBER } from "./Storage";
 import { storeData, getData } from "./util/util";
-
-class Timer {
-  secondsPassed: number = 0;
-  constructor() {
-    makeAutoObservable(this);
-  }
-  increaseTimer() {
-    this.secondsPassed += 1;
-  }
-  resetTimer() {
-    this.secondsPassed = 0;
-  }
-}
-
-export const completionTimer = new Timer();
-setInterval(() => {
-  completionTimer.increaseTimer();
-}, 1000);
+import { completionTimer } from "./util/Timer";
 
 export default function HomeScreen({ navigation }: any) {
   const [progress, setProgress] = useState<number>(0);
